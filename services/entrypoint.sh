@@ -23,7 +23,8 @@ set -eu
 : "${SVC_RETURN:=noreply@azzurra.chat}"
 : "${SVC_FORCE_AUTH:=0}"
 : "${SVC_AUTODEL:=0}"
-# GH #349 — clone-akill threshold (conf.c CLONES → CONF_AKILL_CLONES).
+# GH #349 — clone-akill threshold (conf.c CLONEKILL → CONF_AKILL_CLONES;
+# CLONES is a different, boolean directive — see conf.tmpl).
 # Default 5 mirrors azzurra/services' built-in; the grappa e2e sets 0 to
 # disable clone-AUTOKILL because grappa (a bouncer) opens every session
 # from one container IP and would be false-positive akilled on the 5th.

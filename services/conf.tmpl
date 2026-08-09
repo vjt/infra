@@ -61,9 +61,16 @@ RETURN:${SVC_RETURN}
 FORCE_AUTH:${SVC_FORCE_AUTH}
 AUTODEL:${SVC_AUTODEL}
 
-# Clone-akill threshold — env-gated (GH #349). Maps to conf.c's CLONES
-# directive → CONF_AKILL_CLONES; default 5 mirrors the azzurra/services
-# built-in (autokill on the 5th connection from one IP; expiry 600s).
+# Clone-akill threshold — env-gated (GH #349). The directive that carries
+# it is CLONEKILL (conf.c:936 → CONF_AKILL_CLONES), NOT CLONES: CLONES
+# (conf.c:782 → CONF_SET_CLONE) is a BOOLEAN that switches clone
+# detection as a whole on or off, and it fatals on anything that is not
+# 0 or 1 — so feeding the threshold to CLONES, as this line used to do,
+# both killed the detection outright at 0 and refused to boot at the
+# default 5. (Written without the variable on purpose: envsubst rewrites
+# comments too, and an interpolated example here would read as config.)
+# Default 5 mirrors the azzurra/services built-in (autokill on the 5th
+# connection from one IP; expiry 600s).
 # grappa is a BOUNCER: every session it opens (bahamut-test + azzurra +
 # azzurra-reg — all linked to THIS one hub) originates from grappa's
 # single container IP, so services count them as clones and autokill the
@@ -72,7 +79,7 @@ AUTODEL:${SVC_AUTODEL}
 # cliff (`k-line: You have been Autokilled.` → session :failed →
 # resetSubject 500 → every live-IRC spec times out). The grappa e2e
 # compose sets SVC_AKILL_CLONES=0 to disable clone-AUTOKILL (0 is a valid
-# conf.c value — clone detection/globops still run, only the autokill is
-# off). The standalone testnet keeps the default 5. NB: conf.c fatals on
-# a value that is non-zero AND < CONF_CLONE_MIN_USERS(5), or > 50.
-CLONES:${SVC_AKILL_CLONES}
+# CLONEKILL value — clone detection/globops still run, only the autokill
+# is off). The standalone testnet keeps the default 5. NB: conf.c fatals
+# on a value that is non-zero AND < CONF_CLONE_MIN_USERS(5), or > 50.
+CLONEKILL:${SVC_AKILL_CLONES}
