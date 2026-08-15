@@ -4,12 +4,7 @@ x-bahamut-build: &bahamut-build
   build:
     context: ./bahamut
     args:
-      # TEMPORARY PIN: build bahamut from azzurra/bahamut#26, which fixes an
-      # irc_printf integer-format buffer underflow that SIGSEGVs the ircd on an
-      # operator/adminserv REHASH (see GH #165). PR refs live on the base repo,
-      # so refs/pull/N/head is fetchable via the Dockerfile's azzurra origin.
-      # REVERT to `master` once #26 merges upstream (tracked in GH #165).
-      BAHAMUT_REF: ${BAHAMUT_REF:-refs/pull/26/head}
+      BAHAMUT_REF: ${BAHAMUT_REF:-master}
 
 services:
   cert-init:
